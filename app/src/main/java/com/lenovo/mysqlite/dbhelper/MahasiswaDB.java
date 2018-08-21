@@ -83,14 +83,14 @@ public class MahasiswaDB extends SQLiteOpenHelper {
                 new String[]{Integer.toString(id)});
     }
 
-    public ArrayList<String> getAllMhs() {
+    public ArrayList<String> getAllNickName() {
         ArrayList<String> array_list = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("select * from " + TableName.MAHASISWA, null);
         res.moveToFirst();
 
-        while (res.isAfterLast() == false) {
+        while (!res.isAfterLast()) {
             array_list.add(res.getString(res.getColumnIndex(MahasiswaFieldName.NICKNAME)));
             res.moveToNext();
         }
