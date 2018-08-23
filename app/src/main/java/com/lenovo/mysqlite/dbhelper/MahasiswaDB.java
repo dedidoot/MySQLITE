@@ -10,10 +10,16 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.lenovo.mysqlite.GlobalConst;
-import com.lenovo.mysqlite.field.MahasiswaFieldName;
 import com.lenovo.mysqlite.TableName;
 
 public class MahasiswaDB extends SQLiteOpenHelper {
+
+    public static final String ID = "id";
+    public static final String FULL_NAME = "full_name";
+    public static final String NICKNAME = "nickname";
+    public static final String AGE = "age";
+    public static final String MAJORS = "majors";
+    public static final String IS_MARRIED = "is_married";
 
     public MahasiswaDB(Context context) {
         super(context, GlobalConst.DATABASE_NAME, null, GlobalConst.VERSION_DB);
@@ -24,12 +30,12 @@ public class MahasiswaDB extends SQLiteOpenHelper {
         // TODO Auto-generated method stub
         db.execSQL(
                 "create table " + TableName.MAHASISWA + " " +
-                        "(" + MahasiswaFieldName.ID + " integer primary key, " +
-                        MahasiswaFieldName.FULL_NAME + " text, " +
-                        MahasiswaFieldName.NICKNAME + " text, " +
-                        MahasiswaFieldName.AGE + " text," +
-                        MahasiswaFieldName.MAJORS + " text," +
-                        MahasiswaFieldName.IS_MARRIED + " text)"
+                        "(" + ID + " integer primary key, " +
+                        FULL_NAME + " text, " +
+                        NICKNAME + " text, " +
+                        AGE + " text," +
+                        MAJORS + " text," +
+                        IS_MARRIED + " text)"
         );
     }
 
@@ -43,18 +49,18 @@ public class MahasiswaDB extends SQLiteOpenHelper {
     public boolean insertMhs(String fullName, String nickName, String age, String majors, String isMarried) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(MahasiswaFieldName.FULL_NAME, fullName);
-        contentValues.put(MahasiswaFieldName.NICKNAME, nickName);
-        contentValues.put(MahasiswaFieldName.AGE, age);
-        contentValues.put(MahasiswaFieldName.MAJORS, majors);
-        contentValues.put(MahasiswaFieldName.IS_MARRIED, isMarried);
+        contentValues.put(FULL_NAME, fullName);
+        contentValues.put(NICKNAME, nickName);
+        contentValues.put(AGE, age);
+        contentValues.put(MAJORS, majors);
+        contentValues.put(IS_MARRIED, isMarried);
         db.insert(TableName.MAHASISWA, null, contentValues);
         return true;
     }
 
     public Cursor getMhs(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("select * from " + TableName.MAHASISWA + " where " + MahasiswaFieldName.ID + "=" + id + "", null);
+        Cursor res = db.rawQuery("select * from " + TableName.MAHASISWA + " where " + ID + "=" + id + "", null);
         return res;
     }
 
@@ -67,19 +73,19 @@ public class MahasiswaDB extends SQLiteOpenHelper {
     public boolean updateMhs(Integer id, String fullName, String nickName, String age, String majors, String isMarried) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(MahasiswaFieldName.FULL_NAME, fullName);
-        contentValues.put(MahasiswaFieldName.NICKNAME, nickName);
-        contentValues.put(MahasiswaFieldName.AGE, age);
-        contentValues.put(MahasiswaFieldName.MAJORS, majors);
-        contentValues.put(MahasiswaFieldName.IS_MARRIED, isMarried);
-        db.update(TableName.MAHASISWA, contentValues, MahasiswaFieldName.ID + " = ? ", new String[]{Integer.toString(id)});
+        contentValues.put(FULL_NAME, fullName);
+        contentValues.put(NICKNAME, nickName);
+        contentValues.put(AGE, age);
+        contentValues.put(MAJORS, majors);
+        contentValues.put(IS_MARRIED, isMarried);
+        db.update(TableName.MAHASISWA, contentValues, ID + " = ? ", new String[]{Integer.toString(id)});
         return true;
     }
 
     public Integer deleteMhs(Integer id) {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(TableName.MAHASISWA,
-                MahasiswaFieldName.ID + " = ? ",
+                ID + " = ? ",
                 new String[]{Integer.toString(id)});
     }
 
@@ -91,7 +97,7 @@ public class MahasiswaDB extends SQLiteOpenHelper {
         res.moveToFirst();
 
         while (!res.isAfterLast()) {
-            array_list.add(res.getString(res.getColumnIndex(MahasiswaFieldName.NICKNAME)));
+            array_list.add(res.getString(res.getColumnIndex(NICKNAME)));
             res.moveToNext();
         }
         return array_list;

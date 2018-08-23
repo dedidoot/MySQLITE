@@ -2,6 +2,7 @@ package com.lenovo.mysqlite;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -9,14 +10,19 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.lenovo.mysqlite.databinding.ActivityMainInject;
+import com.lenovo.mysqlite.databinding.AmInject;
 import com.lenovo.mysqlite.dbhelper.MahasiswaDB;
+
+/**
+ * Tutorial room database https://www.youtube.com/watch?v=CTBiwKlO5IU
+ * https://www.youtube.com/watch?v=_wka82BdRow
+ **/
 
 public class MainActivity extends AppCompatActivity {
 
-    private ActivityMainInject inject;
     private MahasiswaDB mahasiswaDB;
     private ShowLoadingCustom progressDialog;
+    private AmInject inject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         progressDialog = new ShowLoadingCustom(this);
 
         inject = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
         inject.navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         inject.btnSave.setOnClickListener(new View.OnClickListener() {
@@ -61,19 +68,27 @@ public class MainActivity extends AppCompatActivity {
 
         progressDialog.show();
 
-        mahasiswaDB.getWritableDatabase().beginTransaction();
-        try {
-            for (int i = 0; i < 10000; i++) {
-                mahasiswaDB.insertMhs(inject.edFullName.getText().toString(),
-                        inject.edNickname.getText().toString() + " " + i,
-                        inject.edAge.getText().toString(),
-                        inject.edMajors.getText().toString(),
-                        inject.rbYes.isChecked() ? "Yes" : "No");
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mahasiswaDB.getWritableDatabase().beginTransaction();
+                try {
+                    for (int i = 0; i < 1000; i++) {
+                        mahasiswaDB.insertMhs(inject.edFullName.getText().toString(),
+                                inject.edNickname.getText().toString() + " " + i,
+                                inject.edAge.getText().toString(),
+                                inject.edMajors.getText().toString(),
+                                inject.rbYes.isChecked() ? "Yes" : "No");
+                    }
+                    mahasiswaDB.getWritableDatabase().setTransactionSuccessful();
+                } finally {
+                    mahasiswaDB.getWritableDatabase().endTransaction();
+                    progressDialog.hide();
+                }
             }
-            mahasiswaDB.getWritableDatabase().setTransactionSuccessful();
-        } finally {
-            mahasiswaDB.getWritableDatabase().endTransaction();
-        }
+        }, 1000);
+
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
