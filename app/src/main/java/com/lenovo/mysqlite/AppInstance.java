@@ -6,7 +6,8 @@ import android.arch.persistence.room.Room;
 import com.lenovo.mysqlite.roomdatabase.AppDatabase;
 
 /**
- * Created by Lenovo on 8/23/2018.
+ * Created by Dedi Dot on 8/23/2018.
+ * Happy Coding!
  */
 
 public class AppInstance extends Application {
